@@ -1,0 +1,22 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: avito-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:8080
+        VITE_OLLAMA_URL: http://localhost:11434
+        VITE_LLM_PROVIDER: ollama
+    container_name: avito-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
