@@ -27,7 +27,7 @@ npm install
 cp .env.example .env
 
 # 4. Запустите сервер:
-npm run dev
+npm start
 ```
 
 Backend будет доступен по адресу:
