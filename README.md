@@ -51,18 +51,6 @@ npm run dev
 Frontend будет доступен по адресу, который покажет Vite в терминале
 (`http://localhost:3000`).
 
-### Скрипты
-
-| Команда              | Описание                     |
-| -------------------- | ---------------------------- |
-| `npm run dev`        | Dev-сервер (Vite)            |
-| `npm run build`      | Продакшн-сборка (tsc + Vite) |
-| `npm run preview`    | Просмотр собранной версии    |
-| `npm run lint`       | Проверка ESLint              |
-| `npm run lint:fix`   | Автоисправление ESLint       |
-| `npm run format`     | Проверка Prettier            |
-| `npm run format:fix` | Автоисправление Prettier     |
-| `npm run typecheck`  | Проверка типов TypeScript    |
 
 ## Настройка LLM (AI-функции)
 
@@ -134,7 +122,126 @@ GIGACHAT_MODEL=GigaChat-2                                            # Gigachat 
 ```
 
 
+## Запуск через Docker Compose
 
+Приложение можно запустить локально через `docker compose`.
+
+В этом режиме запускаются два сервиса
+
+- `backend`
+- `frontend`
+
+### Что нужно для запуска
+
+Убедитесь, что у вас:
+
+- установлен **Docker Desktop**
+- запущен **Docker daemon**
+- создан файл `backend/.env`
+
+### Структура проекта
+
+В корне проекта должен лежать файл:
+
+```text
+docker-compose.yml
+```
+Также должны быть:
+```text
+backend/Dockerfile
+frontend/Dockerfile
+frontend/nginx.conf
+Переменные окружения Backend
+```
+# Запуск проекта
+
+## 1. Создайте файл `backend/.env`
+
+Перед запуском создайте файл `backend/.env` со следующим содержимым:
+
+```env
+GIGACHAT_ACCESS_TOKEN=very_secret_key
+GIGACHAT_MODEL=GigaChat-2
+```
+
+## Переменные сборки frontend
+
+Для `frontend` значения `VITE_*` передаются через `build.args` в `docker-compose.yml`.
+
+Пример:
+
+```yaml
+frontend:
+  build:
+    context: ./frontend
+    args:
+      VITE_API_URL: http://localhost:8080
+      VITE_OLLAMA_URL: http://localhost:11434
+      VITE_LLM_PROVIDER: ollama
+```
+
+Эти переменные используются на этапе сборки frontend-приложения через Vite.
+
+Если вы изменили значения `build.args`, frontend нужно пересобрать:
+
+```bash
+docker compose down
+docker compose up --build
+```
+
+## 2. Запуск
+
+Из корня проекта выполните:
+
+```bash
+docker compose up --build
+```
+## Запуск в фоне
+
+```bash
+docker compose up --build -d
+```
+## Остановка
+
+```bash
+docker compose down
+```
+## После запуска приложение будет доступно по адресам
+
+- **Frontend:** http://localhost:3000
+- **Backend:** http://localhost:8080
+
+## Как это работает
+
+- `backend` запускается в контейнере Node.js на порту `8080`
+- `frontend` собирается через Vite и раздаётся через Nginx на порту `3000`
+- переменные `VITE_*` для `frontend` передаются через `build.args` в `docker-compose.yml`
+- `backend` читает переменные окружения из `backend/.env`
+- 
+## Важно
+
+- Для режима `gigachat` нужен валидный `GIGACHAT_ACCESS_TOKEN`
+- Если токен истёк, AI-запросы будут возвращать ошибку авторизации
+- После изменения `backend/.env` рекомендуется перезапустить контейнеры:
+
+```bash
+docker compose down
+docker compose up --build
+```
+
+
+### Скрипты
+
+| Команда              | Описание                     |
+| -------------------- | ---------------------------- |
+| `npm run dev`        | Dev-сервер (Vite)            |
+| `npm run build`      | Продакшн-сборка (tsc + Vite) |
+| `npm run preview`    | Просмотр собранной версии    |
+| `npm run lint`       | Проверка ESLint              |
+| `npm run lint:fix`   | Автоисправление ESLint       |
+| `npm run format`     | Проверка Prettier            |
+| `npm run format:fix` | Автоисправление Prettier     |
+| `npm run typecheck`  | Проверка типов TypeScript    |
 
 ## Безопасность
 
