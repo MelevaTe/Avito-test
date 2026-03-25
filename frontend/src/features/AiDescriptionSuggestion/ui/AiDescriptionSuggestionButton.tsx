@@ -1,0 +1,130 @@
+import { useMutation } from "@tanstack/react-query";
+import { Loader2, RotateCcw } from "lucide-react";
+import { generateLlmResponse } from "@/shared/api/llm";
+import BulbIcon from "@/shared/assets/blub.svg?react";
+
+import { cn } from "@/shared/lib/utils.ts";
+import { AiSuggestionPopover } from "@/shared/ui/AiSuggestionPopover/AiSuggestionPopover.tsx";
+import { Button } from "@/shared/ui/Button/Button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/shared/ui/Tooltip/Tooltip.tsx";
+
+import { buildDescriptionPrompt } from "../model/buildDescriptionPrompt";
+
+interface AiDescriptionSuggestionButtonProps {
+  formValues: {
+    category?: string;
+    title?: string;
+    price?: string;
+    description?: string;
+    params?: Record<string, string | undefined>;
+  };
+  onApply?: (description: string) => void;
+}
+
+export const AiDescriptionSuggestionButton = ({
+  formValues,
+  onApply,
+}: AiDescriptionSuggestionButtonProps) => {
+  const mutation = useMutation({
+    mutationFn: (prompt: string) => generateLlmResponse(prompt),
+  });
+
+  const hasDescription = (formValues.description ?? "").trim().length > 0;
+
+  const handleRequest = () => {
+    const prompt = buildDescriptionPrompt({
+      category: formValues.category ?? "",
+      title: formValues.title ?? "",
+      price: formValues.price ?? "",
+      description: formValues.description ?? "",
+      params: formValues.params ?? {},
+    });
+    mutation.mutate(prompt);
+  };
+
+  const handleRetry = () => {
+    if (mutation.variables) {
+      mutation.mutate(mutation.variables);
+    }
+  };
+
+  const handleApply = () => {
+    if (!mutation.data || !onApply) return;
+    onApply(mutation.data.trim());
+    mutation.reset();
+  };
+
+  const isOpen = mutation.isSuccess || mutation.isError;
+
+  const getButtonLabel = () => {
+    if (mutation.isPending) return "Выполняется запрос";
+    if (isOpen) return "Повторить запрос";
+    return hasDescription ? "Улучшить описание" : "Придумать описание";
+  };
+
+  const buttonIcon = mutation.isPending ? (
+    <Loader2 className="animate-spin" />
+  ) : isOpen ? (
+    <RotateCcw />
+  ) : (
+    <BulbIcon />
+  );
+
+  const handleButtonClick = () => {
+    if (isOpen) {
+      handleRetry();
+    } else {
+      handleRequest();
+    }
+  };
+
+  return (
+    <TooltipProvider>
+      <Tooltip open={isOpen}>
+        <TooltipTrigger asChild>
+          <Button
+            type="button"
+            variant="warning"
+            size="ai"
+            disabled={mutation.isPending}
+            onClick={handleButtonClick}
+          >
+            {buttonIcon}
+            {getButtonLabel()}
+          </Button>
+        </TooltipTrigger>
+
+        {isOpen && (
+          <TooltipContent
+            side="top"
+            className={cn(
+              "w-[340px] rounded-[2px] p-2 text-sm shadow-lg",
+              mutation.isError
+                ? "bg-avito-danger-bg text-avito-danger-text"
+                : "bg-avito-bg-surface border-avito-border-primary text-avito-text-primary",
+            )}
+          >
+            {mutation.isSuccess ? (
+              <AiSuggestionPopover
+                status="success"
+                response={mutation.data}
+                onApply={onApply ? handleApply : undefined}
+                onClose={mutation.reset}
+              />
+            ) : (
+              <AiSuggestionPopover
+                status="error"
+                onClose={mutation.reset}
+              />
+            )}
+          </TooltipContent>
+        )}
+      </Tooltip>
+    </TooltipProvider>
+  );
+};

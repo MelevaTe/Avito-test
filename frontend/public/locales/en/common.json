@@ -1,0 +1,20 @@
+{
+  "openProfile": "Open profile",
+  "switchLanguage": "Switch language",
+  "switchTheme": "Switch theme",
+  "comingSoon": "Coming soon",
+  "back": "Back",
+  "loading": "Loading",
+  "audioInterview": "Audio Interview",
+  "audioInterviewDesc": "Audio version of your research in interview format",
+  "mindMap": "Mind Map",
+  "mindMapDesc": "Visual map of connections",
+  "reports": "Reports",
+  "reportsDesc": "Brief summary from sources",
+  "presentation": "Presentation",
+  "presentationDesc": "Slide generation",
+  "quiz": "Quiz",
+  "quizDesc": "Knowledge test based on sources",
+  "cards": "Cards",
+  "cardsDesc": "Flash cards for memorization"
+}

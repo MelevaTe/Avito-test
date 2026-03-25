@@ -1,0 +1,254 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-avito-bg-page: var(--avito-bg-page);
+  --color-avito-bg-surface: var(--avito-bg-surface);
+
+  --color-avito-border-primary: var(--avito-border-primary);
+
+  --color-avito-input-bg: var(--avito-input-bg);
+
+  --color-avito-placeholder-bg: var(--avito-placeholder-bg);
+
+  --color-avito-text-primary: var(--avito-text-primary);
+  --color-avito-text-secondary: var(--avito-text-secondary);
+  --color-avito-text-tertiary: var(--avito-text-tertiary);
+  --color-avito-text-muted: var(--avito-text-muted);
+  --color-avito-text-muted-secondary: var(--avito-text-muted-secondary);
+
+  --color-avito-accent-primary: var(--avito-accent-primary);
+  --color-avito-accent-primary-foreground: var(--avito-accent-primary-foreground);
+  --color-avito-accent-primary-hover: var(--avito-accent-primary-hover);
+
+  --color-avito-warning-text: var(--avito-warning-text);
+  --color-avito-warning-border: var(--avito-warning-border);
+  --color-avito-warning-bg: var(--avito-warning-bg);
+
+  --color-avito-success-text: var(--avito-success-text);
+  --color-avito-success-border: var(--avito-success-border);
+  --color-avito-success-bg: var(--avito-success-bg);
+
+  --color-avito-danger-text: var(--avito-danger-text);
+  --color-avito-danger-text-secondary: var(--avito-danger-text-secondary);
+  --color-avito-danger-border: var(--avito-danger-border);
+  --color-avito-danger-border-secondary: var(--avito-danger-border-secondary);
+  --color-avito-danger-bg: var(--avito-danger-bg);
+  --color-avito-danger-bg-secondary: var(--avito-danger-bg-secondary);
+
+  --color-avito-control-disabled: var(--avito-control-disabled);
+  --color-avito-disabled-bg: var(--avito-disabled-bg);
+  --color-avito-disabled-foreground: var(--avito-disabled-foreground);
+}
+
+:root {
+  color-scheme: light;
+  --radius: 0.875rem;
+
+  --avito-bg-page: #f7f5f8;
+  --avito-bg-surface: #ffffff;
+
+  --avito-border-primary: #d9d9d9;
+
+  --avito-input-bg: #f6f6f8;
+
+  --avito-placeholder-bg: #fafafa;
+
+  --avito-text-primary: #000000;
+  --avito-text-secondary: #707176;
+  --avito-text-tertiary: #848388;
+  --avito-text-muted: rgba(0, 0, 0, 0.45);
+  --avito-text-muted-secondary: rgba(0, 0, 0, 0.85);
+
+  --avito-accent-primary: #1890ff;
+  --avito-accent-primary-foreground: #ffffff;
+  --avito-accent-primary-hover: #0f7ae5;
+
+  --avito-warning-text: #faad14;
+  --avito-warning-border: #ffa940;
+  --avito-warning-bg: #f9f1e6;
+
+  --avito-success-text: #52c41a;
+  --avito-success-border: #b7eb8f;
+  --avito-success-bg: #f6ffed;
+
+  --avito-danger-text: #ff4d4f;
+  --avito-danger-text-secondary: #c00f0c;
+  --avito-danger-border: #ec221f;
+  --avito-danger-border-secondary: #d9d9d9;
+  --avito-danger-bg: #fee9e7;
+  --avito-danger-bg-secondary: #fcb3ad;
+
+  --avito-control-disabled: #bfbfbf;
+  --avito-disabled-bg: #d9d9d9;
+  --avito-disabled-foreground: rgba(255, 255, 255, 0.7);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --avito-bg-page: #111315;
+  --avito-bg-surface: #1a1d21;
+
+  --avito-border-primary: #2b3138;
+
+  --avito-input-bg: #1a1d21;
+
+  --avito-placeholder-bg: #111315;
+
+  --avito-text-primary: #f5f7fa;
+  --avito-text-secondary: #b3bac5;
+  --avito-text-tertiary: #8b93a1;
+  --avito-text-muted: rgba(245, 247, 250, 0.45);
+
+  --avito-accent-primary: #1890ff;
+  --avito-accent-primary-foreground: #ffffff;
+  --avito-accent-primary-hover: #0f7ae5;
+
+  --avito-warning-text: #ffbf66;
+  --avito-warning-border: #7a5a22;
+  --avito-warning-bg: #2b2216;
+
+  --avito-success-text: #7ddc6f;
+  --avito-success-border: #315b2d;
+  --avito-success-bg: #162317;
+
+  --avito-danger-text: #ff8a80;
+  --avito-danger-text-secondary: #c00f0cс;
+  --avito-danger-border: #6d3532;
+  --avito-danger-border-secondary: #d9d9d9;
+  --avito-danger-bg: #fee9e7;
+  --avito-danger-bg-secondary: #fcb3ad;
+
+  --avito-control-disabled: #4b5563;
+  --avito-disabled-bg: #374151;
+  --avito-disabled-foreground: rgba(255, 255, 255, 0.7);
+}
+
+@utility typo-page-title {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 40px;
+  letter-spacing: 0;
+}
+
+@utility typo-meta-lg {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+@utility typo-meta {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+@utility typo-section-title {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: 0;
+}
+
+@utility typo-body {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+@utility typo-body-sm {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 0;
+}
+
+@utility typo-body-strong {
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+@utility typo-body-sm-strong {
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+@utility typo-warning-title {
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0;
+}
+
+@utility typo-warning-body {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  background: var(--avito-bg-page);
+  color: var(--avito-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  animation: shimmer 1.4s infinite;
+}
+
+.dark .shimmer::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
