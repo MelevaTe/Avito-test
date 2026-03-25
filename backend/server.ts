@@ -130,10 +130,13 @@ fastify.post('/ai/generate', async (request, reply) => {
 
     const suggestion = await generateWithGigaChat(prompt);
 
+    request.log.info({ suggestion }, 'AI suggestion generated');
+
     return {
       success: true,
       suggestion,
     };
+
   } catch (error) {
     if (error instanceof ZodError) {
       reply.status(400).send({ success: false, error: treeifyError(error) });

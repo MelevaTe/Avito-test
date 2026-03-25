@@ -92,15 +92,18 @@ Frontend не ходит напрямую в GigaChat.
 
 ## Важно про GigaChat
 
-В текущей реализации backend использует готовый `access_token`, который хранится в `backend/.env`.
+В текущей реализации backend не хранит `access_token` в `.env` и не требует его ручного обновления.
 
-Если токен истечёт, AI-запросы через `gigachat` начнут возвращать ошибку авторизации. В этом случае нужно:
+Для авторизации используется `GIGACHAT_AUTH_KEY`, который хранится в `backend/.env`.
+На его основе backend автоматически получает `access_token` через OAuth API GigaChat, кэширует его в памяти и обновляет при истечении срока действия.
 
-1. получить новый `access_token`
-2. обновить `GIGACHAT_ACCESS_TOKEN` в `backend/.env`
-3. перезапустить backend
+Если AI-запросы через `gigachat` начинают падать с ошибкой авторизации, нужно проверить:
 
-Автоматическое обновление токена не реализовано.
+1. что в `backend/.env` задан корректный `GIGACHAT_AUTH_KEY`
+2. что backend имеет доступ к GigaChat OAuth/API endpoint
+3. что backend был перезапущен после изменения `.env`
+
+Ручное обновление `access_token` не требуется.
 
 
 ### Переменные окружения Frontend
@@ -117,8 +120,8 @@ VITE_LLM_PROVIDER=gigachat              # Llm Provider
 Файл Backend/.env
 
 ```env
-GIGACHAT_ACCESS_TOKEN=very_secret_key   # Backend API
-GIGACHAT_MODEL=GigaChat-2                                            # Gigachat Model
+GIGACHAT_AUTH_KEY=very_secret_key                                    # GigaChat Authorization key
+GIGACHAT_MODEL=GigaChat-2                                            # GigaChat Model
 ```
 
 
@@ -160,7 +163,7 @@ frontend/nginx.conf
 Перед запуском создайте файл `backend/.env` со следующим содержимым:
 
 ```env
-GIGACHAT_ACCESS_TOKEN=very_secret_key
+GIGACHAT_AUTH_KEY=very_secret_key
 GIGACHAT_MODEL=GigaChat-2
 ```
 
@@ -220,9 +223,11 @@ docker compose down
 - 
 ## Важно
 
-- Для режима `gigachat` нужен валидный `GIGACHAT_ACCESS_TOKEN`
-- Если токен истёк, AI-запросы будут возвращать ошибку авторизации
-- После изменения `backend/.env` рекомендуется перезапустить контейнеры:
+- Для режима `gigachat` нужен валидный `GIGACHAT_AUTH_KEY`
+- Backend автоматически получает и обновляет `access_token` через OAuth API GigaChat
+- Ручное обновление `access_token` не требуется
+- После изменения переменных в `backend/.env` нужно перезапустить backend
+- Поскольку GigaChat является внешним сервисом, при rate limit или сетевых сбоях AI-запросы могут временно завершаться ошибкой
 
 ```bash
 docker compose down
@@ -245,7 +250,7 @@ docker compose up --build
 
 ## Безопасность
 
-- `GIGACHAT_ACCESS_TOKEN` хранится только на backend
+- `GIGACHAT_AUTH_KEY` хранится только на backend
 - frontend не знает токен и не обращается в GigaChat напрямую
 - в режиме `gigachat` браузер общается только с backend API
 - в режиме `ollama` frontend работает напрямую с локальным Ollama без токенов
